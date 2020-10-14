@@ -1,0 +1,47 @@
+
+debug: false
+
+logging:
+  # file: app.log
+  level:
+    root: INFO
+    com.topcoder.productsearch: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.springframework.jdbc.core: INFO
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sdlc_poc?useSSL=false&nullNamePatternMatchesAll=true&allowPublicKeyRetrieval=true
+    username: sdlc
+    password: sdlc
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 60000
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format__sql: true
+
+server:
+  port: 8090
+  servlet-path: /api
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+      base-path: /
+      path-mapping:
+        health: healthcheck
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: HEAD,GET,PUT,POST,DELETE
+

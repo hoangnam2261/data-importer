@@ -4,6 +4,7 @@ import lombok.Builder;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import java.util.Set;
 
 @Builder
 @Table(name = "frs_detail")
+@Entity
 public class FRSDetail {
 
     @Id

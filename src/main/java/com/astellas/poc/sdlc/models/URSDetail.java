@@ -1,9 +1,11 @@
 package com.astellas.poc.sdlc.models;
 
 import lombok.Builder;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,8 @@ import javax.persistence.Table;
 import java.util.Set;
 
 @Table(name = "urs_detail")
+@Setter
+@Entity
 @Builder
 public class URSDetail {
     @Id

@@ -1,9 +1,12 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Builder;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Builder
 public class MetaInfo {
 
     @Column(name = "file_name")

@@ -1,14 +1,19 @@
 package com.astellas.poc.sdlc.converter;
 
 import com.astellas.poc.sdlc.models.DetailMetaInfo;
+import com.astellas.poc.sdlc.models.MetaInfo;
+import com.astellas.poc.sdlc.models.Project;
+import com.astellas.poc.sdlc.models.URS;
 import com.astellas.poc.sdlc.models.URSDetail;
 import com.astellas.poc.sdlc.models.URSRequirementCategory;
+import com.astellas.poc.sdlc.repository.ProjectRepository;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -22,32 +27,39 @@ import java.util.stream.Collectors;
 @Component
 public class HtmlParser implements ApplicationRunner {
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     public void convert() throws Exception {
         File file = new File("C:\\Users\\LW81343\\Desktop\\base_code1\\data-importer\\testdata\\root_folder\\projectA\\URS-SAMPLE-01234567-v1.0.docx.html");
         Document document = Jsoup.parse(file, "UTF-8");
         String documentType = document.select("*.document_type").first().text();
         String documentId = document.select("*.document_id").first().text();
         String documentVersion = document.select("*.document_ver").first().text();
+        Project project = new Project();
+
+        project.setName("ProjectA");
+        URS urs = new URS();
         switch (documentType) {
             case "URS":
                 Set<URSDetail> ursDetails = parseURSDetail(document);
-                System.out.println(ursDetails);
+                urs.setUrsDetails(ursDetails);
             case "FRS":
                 String businessProcessDescription = getTextOfAllElement(document, "p.business_process_description");
+                urs.setBusinessProcessDescription(businessProcessDescription);
             case "DCS":
                 //This is parse metaInfo
                 //TODO add fileName
-                String purpose = getTextOfAllElement(document, "p.purpose");
-                String scope = getTextOfAllElement(document, "p.scope");
-                String outOfScope = getTextOfAllElement(document, "p.out_of_scope");
-                String assumptions = getTextOfAllElement(document, "p.assumptions");
-                String limitations = getTextOfAllElement(document, "p.limitations");
-                String dependencies = getTextOfAllElement(document, "p.dependencies");
-                String systemDescription = getTextOfAllElement(document, "p.system_description");
+                MetaInfo metaInfo = parseMetaInfo(document);
+                urs.setMetaInfo(metaInfo);
                 break;
             default:
                 break;
         }
+        urs.setDocumentId(documentId);
+        urs.setVersion(documentVersion);
+        project.addUrs(urs);
+        projectRepository.save(project);
     }
 
     @Override
@@ -89,6 +101,27 @@ public class HtmlParser implements ApplicationRunner {
                         .filter(Objects::nonNull)
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet());
+    }
+
+    private MetaInfo parseMetaInfo(Element element) {
+        //This is parse metaInfo
+        //TODO add fileName
+        String purpose = getTextOfAllElement(element, "p.purpose");
+        String scope = getTextOfAllElement(element, "p.scope");
+        String outOfScope = getTextOfAllElement(element, "p.out_of_scope");
+        String assumptions = getTextOfAllElement(element, "p.assumptions");
+        String limitations = getTextOfAllElement(element, "p.limitations");
+        String dependencies = getTextOfAllElement(element, "p.dependencies");
+        String systemDescription = getTextOfAllElement(element, "p.system_description");
+        return MetaInfo.builder()
+                       .purpose(purpose)
+                       .scope(scope)
+                       .outOfScope(outOfScope)
+                       .assumptions(assumptions)
+                       .limitations(limitations)
+                       .dependencies(dependencies)
+                       .systemDescription(systemDescription)
+                       .build();
     }
 
     private String getTextOfAllElement(Element element, String cssQuery) {

@@ -1,6 +1,7 @@
 package com.astellas.poc.sdlc.models;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.Version;
 import java.util.Set;
 
 @Table(name = "test_script")
+@Entity
 public class TestScript {
 
     @Id

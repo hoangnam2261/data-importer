@@ -1,6 +1,5 @@
 package com.astellas.poc.sdlc.models;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,11 +13,7 @@ public class Project {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "project_name")
-    private String projectName;
-
-    @Column(name = "system_name")
-    private String systemName;
+    private String name;
 
     @OneToMany(mappedBy = "project")
     private Set<URS> urs;
@@ -28,4 +23,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private Set<DCS> dcs;
+
+    @OneToMany(mappedBy = "project")
+    private Set<TestScript> testScripts;
 }

@@ -1,11 +1,18 @@
 package com.astellas.poc.sdlc.models;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Table(name = "urs_detail")
 public class URSDetail {
@@ -17,5 +24,17 @@ public class URSDetail {
     @JoinColumn(name = "parent_id")
     private URS urs;
 
-    private String description;
+    //TODO we need to add 1 more field: Related URS "frs_detail.related_urs, urs_frs_relation.*"
+    @ManyToMany(mappedBy = "ursDetails")
+    @JoinTable(name = "urs_frs_relation",
+            joinColumns = @JoinColumn(name = "crs_detail_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "frs_detail_id", referencedColumnName = "id"))
+    private Set<FRSDetail> frsDetails;
+
+    @Column(name = "requirement_category")
+    @Enumerated(EnumType.STRING)
+    private RequirementCategory requirementCategory;
+
+    @Embedded
+    private DetailMetaInfo detailMetaInfo;
 }

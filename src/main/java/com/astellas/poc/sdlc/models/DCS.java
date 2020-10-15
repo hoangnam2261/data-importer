@@ -1,6 +1,7 @@
 package com.astellas.poc.sdlc.models;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,6 +28,9 @@ public class DCS {
 
     @OneToMany(mappedBy = "dcs")
     private Set<DCSItem> dcsItems;
+
+    @Embedded
+    private MetaInfo metaInfo;
 
     @Version
     private String version;

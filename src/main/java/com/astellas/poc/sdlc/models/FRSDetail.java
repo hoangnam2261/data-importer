@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -33,10 +34,10 @@ public class FRSDetail {
     @Enumerated(EnumType.STRING)
     private FRSRequirementCategory requirementCategory;
 
-    @Column(name = "requirement_id")
-    private Long requirementId;
-
     @ManyToMany
+    @JoinTable(name = "urs_frs_relation",
+            joinColumns = @JoinColumn(name = "crs_detail_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "frs_detail_id", referencedColumnName = "id"))
     private Set<URSDetail> ursDetails;
 
     @Embedded

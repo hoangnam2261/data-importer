@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import java.util.Set;
 
 @Table(name = "dcs")
@@ -34,6 +33,5 @@ public class DCS {
     @Embedded
     private MetaInfo metaInfo;
 
-    @Version
     private String version;
 }

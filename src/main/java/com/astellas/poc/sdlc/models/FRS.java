@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import java.util.Set;
 
 @Table(name = "frs")
@@ -37,6 +36,5 @@ public class FRS {
     @Column(name = "business_process_description")
     private String businessProcessDescription;
 
-    @Version
     private String version;
 }

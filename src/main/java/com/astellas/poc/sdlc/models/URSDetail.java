@@ -33,9 +33,6 @@ public class URSDetail {
 
     //TODO we need to add 1 more field: Related URS "frs_detail.related_urs, urs_frs_relation.*"
     @ManyToMany(mappedBy = "ursDetails")
-    @JoinTable(name = "urs_frs_relation",
-            joinColumns = @JoinColumn(name = "crs_detail_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "frs_detail_id", referencedColumnName = "id"))
     private Set<FRSDetail> frsDetails;
 
     @Column(name = "requirement_category")

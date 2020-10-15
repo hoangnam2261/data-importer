@@ -2,6 +2,7 @@ package com.astellas.poc.sdlc.models;
 
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class Project {
 
     private String name;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<URS> urs = new HashSet<>();
 
     @OneToMany(mappedBy = "project")

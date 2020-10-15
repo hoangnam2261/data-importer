@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import java.util.Set;
 
 @Table(name = "test_script")
@@ -27,7 +26,6 @@ public class TestScript {
     @Column(name = "document_id")
     private String documentId;
 
-    @Version
     private String version;
 
     @Column(name = "file_name")

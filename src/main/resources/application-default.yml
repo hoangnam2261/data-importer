@@ -23,6 +23,8 @@ spring:
     properties:
       hibernate:
         format__sql: true
+        id:
+          new_generator_mappings : false
 
 server:
   port: 8090

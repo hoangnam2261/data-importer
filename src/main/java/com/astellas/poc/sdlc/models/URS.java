@@ -2,6 +2,7 @@ package com.astellas.poc.sdlc.models;
 
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -12,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import java.util.Set;
 
 @Setter
@@ -31,7 +31,7 @@ public class URS {
     @Column(name = "document_id")
     private String documentId;
 
-    @OneToMany(mappedBy = "urs")
+    @OneToMany(mappedBy = "urs", cascade = CascadeType.ALL)
     private Set<URSDetail> ursDetails;
 
     @Embedded
@@ -40,7 +40,6 @@ public class URS {
     @Column(name = "business_process_description")
     private String businessProcessDescription;
 
-    @Version
     private String version;
 
     public URS setUrsDetails(Set<URSDetail> ursDetails) {

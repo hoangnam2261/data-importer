@@ -1,0 +1,38 @@
+package com.astellas.poc.sdlc.models;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public enum URSRequirementCategory {
+    GENERAL_USER_REQUIREMENTS,
+    OPERATIONS_REQUIREMENTS,
+    USER_INTERFACE_REQUIREMENTS,
+    INPUT_OUTPUT_REQUIREMENTS,
+    SYSTEM_INTERFACE_REQUIREMENTS,
+    DATA_REQUIREMENTS,
+    REPORTING_REQUIREMENTS,
+    HARDWARE_AND_INFRASTRUCTURE_REQUIREMENTS,
+    USER_ACCESS_ROLES_REQUIREMENTS,
+    SECURITY_REQUIREMENTS,
+    BUSINESS_CONTINUITY_PLAN,
+    SYSTEM_RECOVERY,
+    BACK_UP,
+    PERFORMANCE,
+    REGULATORY_REQUIREMENTS,
+    ELECTRONIC_RECORDS_GENERAL,
+    ELECTRONIC_SIGNATURES,
+    SIGNATURE_RECORD_LINKING,
+    ELECTRONIC_SIGNATURE_COMPONENTS_AND_CONTROLS,
+    AUDIT_TRAILS,
+    DATA_PRIVACY_AND_PROTECTION_REQUIREMENTS,
+    JAPANESE_SARBANES_OXLEY_J_SOX_REQUIREMENTS,
+    SUPPORT_AND_MAINTENANCE_REQUIREMENTS,
+    NON_COMPUTERIZED_NON_FUNCTIONAL_REQUIREMENTS;
+
+    public static Set<String> getURSRequirementCategoryClasses() {
+        return Stream.of(URSRequirementCategory.values())
+                     .map(URSRequirementCategory -> URSRequirementCategory.name().toLowerCase())
+                     .collect(Collectors.toSet());
+    }
+}

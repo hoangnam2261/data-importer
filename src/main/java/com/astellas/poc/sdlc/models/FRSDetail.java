@@ -1,5 +1,7 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Builder;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EnumType;
@@ -10,8 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Set;
 
+@Builder
+@Table(name = "frs_detail")
 public class FRSDetail {
 
     @Id
@@ -24,7 +29,7 @@ public class FRSDetail {
 
     @Column(name = "requirement_category")
     @Enumerated(EnumType.STRING)
-    private RequirementCategory requirementCategory;
+    private FRSRequirementCategory requirementCategory;
 
     @Column(name = "requirement_id")
     private Long requirementId;

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.astellas.poc.sdlc.converter.HtmlConverter;
 
-@Component
+//@Component
 public class ProcessRunner implements ApplicationRunner {
 
   public static final Logger logger = LoggerFactory.getLogger(ProcessRunner.class);

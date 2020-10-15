@@ -1,5 +1,7 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Builder;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.persistence.Table;
 import java.util.Set;
 
 @Table(name = "urs_detail")
+@Builder
 public class URSDetail {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -33,7 +36,7 @@ public class URSDetail {
 
     @Column(name = "requirement_category")
     @Enumerated(EnumType.STRING)
-    private RequirementCategory requirementCategory;
+    private URSRequirementCategory requirementCategory;
 
     @Embedded
     private DetailMetaInfo detailMetaInfo;

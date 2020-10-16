@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS `urs_detail`;
 
 DROP TABLE IF EXISTS `urs_frs_relation`;
 
-CREATE TABLE `dcs`  ( 
+CREATE TABLE `dcs`  (
 	`id`                	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`project_id`        	bigint(11) UNSIGNED NOT NULL,
 	`document_id`       	varchar(100) NULL,
@@ -97,7 +97,7 @@ CREATE TABLE `dcs`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `dcs_item`  ( 
+CREATE TABLE `dcs_item`  (
 	`id`              	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`parent_id`       	bigint(11) UNSIGNED NOT NULL,
 	`item_number`     	varchar(20) NULL,
@@ -109,14 +109,14 @@ CREATE TABLE `dcs_item`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `frs`  ( 
+CREATE TABLE `frs`  (
 	`id`                          	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`project_id`                  	bigint(11) UNSIGNED NOT NULL,
 	`document_id`                 	varchar(100) NULL,
 	`version`                     	varchar(25) NULL,
 	`file_name`                   	varchar(100) NULL,
 	`purpose`                     	varchar(2000) NULL,
-	`score`                       	varchar(2000) NULL,
+	`scope`                       	varchar(2000) NULL,
 	`out_of_scope`                	varchar(2000) NULL,
 	`assumptions`                 	varchar(2000) NULL,
 	`limitations`                 	varchar(2000) NULL,
@@ -129,7 +129,7 @@ CREATE TABLE `frs`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `frs_detail`  ( 
+CREATE TABLE `frs_detail`  (
 	`id`                  	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`parent_id`           	bigint(11) UNSIGNED NOT NULL,
 	`requirement_category`	varchar(50) NULL,
@@ -144,7 +144,7 @@ CREATE TABLE `frs_detail`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `project`  ( 
+CREATE TABLE `project`  (
 	`id`              	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`name`            	varchar(200) NULL,
 	`created_at`      	datetime NULL DEFAULT CURRENT_TIMESTAMP,
@@ -154,7 +154,7 @@ CREATE TABLE `project`  (
 ENGINE = InnoDB
 CHARACTER SET utf8mb4;
 
-CREATE TABLE `script_instruction`  ( 
+CREATE TABLE `script_instruction`  (
 	`id`                 	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`parent_id`          	bigint(11) UNSIGNED NOT NULL,
 	`step_number`        	varchar(25) NULL,
@@ -167,7 +167,7 @@ CREATE TABLE `script_instruction`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `test_case`  ( 
+CREATE TABLE `test_case`  (
 	`id`                      	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`parent_id`               	bigint(11) UNSIGNED NOT NULL,
 	`test_case_id`            	varchar(50) NULL,
@@ -181,7 +181,7 @@ CREATE TABLE `test_case`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `test_script`  ( 
+CREATE TABLE `test_script`  (
 	`id`              	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`project_id`      	bigint(11) UNSIGNED NOT NULL,
 	`document_id`     	varchar(100) NULL,
@@ -196,7 +196,7 @@ CREATE TABLE `test_script`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `urs`  ( 
+CREATE TABLE `urs`  (
 	`id`                          	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`project_id`                  	bigint(11) UNSIGNED NOT NULL,
 	`document_id`                 	varchar(100) NULL,
@@ -217,7 +217,7 @@ CREATE TABLE `urs`  (
 ENGINE = InnoDB
 CHARACTER SET utf8mb4;
 
-CREATE TABLE `urs_detail`  ( 
+CREATE TABLE `urs_detail`  (
 	`id`                  	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`parent_id`           	bigint(11) UNSIGNED NOT NULL,
 	`requirement_category`	varchar(50) NULL,
@@ -231,7 +231,7 @@ CREATE TABLE `urs_detail`  (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE `urs_frs_relation`  ( 
+CREATE TABLE `urs_frs_relation`  (
 	`id`              	bigint(11) UNSIGNED AUTO_INCREMENT NOT NULL,
 	`urs_detail_id`   	bigint(11) UNSIGNED NOT NULL,
 	`frs_detail_id`   	bigint(11) UNSIGNED NOT NULL,
@@ -265,7 +265,7 @@ ALTER TABLE `urs`
 	ADD CONSTRAINT `kf_urs_project_id`
 	FOREIGN KEY(`project_id`)
 	REFERENCES `project`(`id`)
-	ON DELETE CASCADE 
+	ON DELETE CASCADE
 	ON UPDATE NO ACTION ;
 
 ALTER TABLE `frs`
@@ -309,13 +309,13 @@ ALTER TABLE `urs_frs_relation`
 	REFERENCES `urs_detail`(`id`)
 	ON DELETE CASCADE ;
 
-CREATE INDEX `idx_dcs_projectid_id` USING BTREE 
+CREATE INDEX `idx_dcs_projectid_id` USING BTREE
 	ON `dcs`(`project_id`, `id`);
 
-CREATE INDEX `idx_dcsitem_parentid_id` USING BTREE 
+CREATE INDEX `idx_dcsitem_parentid_id` USING BTREE
 	ON `dcs_item`(`parent_id`, `id`);
 
-CREATE INDEX `idx_dcsitem_parentid_itemno` USING BTREE 
+CREATE INDEX `idx_dcsitem_parentid_itemno` USING BTREE
 	ON `dcs_item`(`parent_id`, `item_number`);
 
 CREATE INDEX `idx_frs_projectid_id`
@@ -324,19 +324,19 @@ CREATE INDEX `idx_frs_projectid_id`
 CREATE INDEX `idx_frsdetail_aprentid_reqid`
 	ON `frs_detail`(`parent_id`, `requirement_id`);
 
-CREATE UNIQUE INDEX `idex_project_name` USING BTREE 
+CREATE UNIQUE INDEX `idex_project_name` USING BTREE
 	ON `project`(`name` DESC);
 
-CREATE INDEX `idx_script_instruction_stepno` USING BTREE 
+CREATE INDEX `idx_script_instruction_stepno` USING BTREE
 	ON `script_instruction`(`parent_id`, `step_number`);
 
-CREATE INDEX `idx_testcase_parentid_testcaseid` USING BTREE 
+CREATE INDEX `idx_testcase_parentid_testcaseid` USING BTREE
 	ON `test_case`(`parent_id`, `test_case_id`);
 
-CREATE INDEX `idx_testscript_projectid_id` USING BTREE 
+CREATE INDEX `idx_testscript_projectid_id` USING BTREE
 	ON `test_script`(`project_id`, `id`);
 
-CREATE INDEX `idx_urs_projectid_id` USING BTREE 
+CREATE INDEX `idx_urs_projectid_id` USING BTREE
 	ON `urs`(`project_id`, `id`);
 
 CREATE INDEX `idx_ursdetail_parentid_reqid`

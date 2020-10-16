@@ -25,17 +25,32 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<URS> urs = new HashSet<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<FRS> frs = new HashSet<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<DCS> dcs = new HashSet<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<TestScript> testScripts = new HashSet<>();
 
     public void addUrs(URS urs) {
         this.urs.add(urs);
         urs.setProject(this);
+    }
+
+    public void addFrs(FRS frs) {
+        this.frs.add(frs);
+        frs.setProject(this);
+    }
+
+    public void addDcs(DCS dcs) {
+        this.dcs.add(dcs);
+        dcs.setProject(this);
+    }
+
+    public void addTestScript(TestScript testScript) {
+        this.testScripts.add(testScript);
+        testScript.setProject(this);
     }
 }

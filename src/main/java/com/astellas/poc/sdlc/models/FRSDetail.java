@@ -1,6 +1,7 @@
 package com.astellas.poc.sdlc.models;
 
 import lombok.Builder;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 import java.util.Set;
 
 @Builder
+@Setter
 @Table(name = "frs_detail")
 @Entity
 public class FRSDetail {
@@ -42,4 +44,8 @@ public class FRSDetail {
 
     @Embedded
     private DetailMetaInfo detailMetaInfo;
+
+    @Column(name = "related_urs")
+    private String relatedURS;
+
 }

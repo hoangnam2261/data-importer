@@ -1,5 +1,11 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +17,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
 @Table(name = "test_script")
 @Entity
 public class TestScript {
@@ -38,6 +48,12 @@ public class TestScript {
 
     private String prerequisites;
 
-    @OneToMany(mappedBy = "testScript")
+    @OneToMany(mappedBy = "testScript", cascade = CascadeType.ALL)
     private Set<TestCase> testCases;
+
+    public TestScript setTestCases(Set<TestCase> testCases) {
+        this.testCases = testCases;
+        testCases.parallelStream().forEach(testCase -> testCase.setTestScript(this));
+        return this;
+    }
 }

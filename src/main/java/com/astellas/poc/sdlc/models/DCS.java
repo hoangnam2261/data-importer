@@ -1,5 +1,8 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Setter;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -12,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+@Setter
 @Table(name = "dcs")
 @Entity
 public class DCS {
@@ -27,11 +31,17 @@ public class DCS {
     @Column(name = "document_id")
     private String documentId;
 
-    @OneToMany(mappedBy = "dcs")
+    @OneToMany(mappedBy = "dcs", cascade = CascadeType.ALL)
     private Set<DCSItem> dcsItems;
 
     @Embedded
     private MetaInfo metaInfo;
 
     private String version;
+
+    public DCS setDcsItems(Set<DCSItem> dcsItems) {
+        this.dcsItems = dcsItems;
+        dcsItems.parallelStream().forEach(dcsItem -> dcsItem.setDcs(this));
+        return this;
+    }
 }

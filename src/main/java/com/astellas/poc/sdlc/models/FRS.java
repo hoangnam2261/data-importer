@@ -1,5 +1,8 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Setter;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -12,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+@Setter
 @Table(name = "frs")
 @Entity
 public class FRS {
@@ -27,7 +31,7 @@ public class FRS {
     @Column(name = "document_id")
     private String documentId;
 
-    @OneToMany(mappedBy = "frs")
+    @OneToMany(mappedBy = "frs", cascade = CascadeType.ALL)
     private Set<FRSDetail> frsDetails;
 
     @Embedded
@@ -37,4 +41,10 @@ public class FRS {
     private String businessProcessDescription;
 
     private String version;
+
+    public FRS setFrsDetails(Set<FRSDetail> frsDetails) {
+        this.frsDetails = frsDetails;
+        frsDetails.parallelStream().forEach(fd -> fd.setFrs(this));
+        return this;
+    }
 }

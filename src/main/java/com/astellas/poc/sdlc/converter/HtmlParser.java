@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class HtmlParser implements ApplicationRunner {
@@ -45,7 +46,7 @@ public class HtmlParser implements ApplicationRunner {
     public void convert() throws Exception {
         Project project = new Project();
         project.setName("ProjectC");
-        File dir = new File("C:\\Users\\LW81343\\Desktop\\base_code1\\data-importer\\testdata\\root_folder\\projectA");
+        File dir = new File("C:\\project\\nng\\data-importer\\testdata\\root_folder\\projectA");
         FileUtils.listFiles(dir, new String[]{"html"}, false)
                  .parallelStream()
                  .forEach(file -> {
@@ -60,8 +61,8 @@ public class HtmlParser implements ApplicationRunner {
                      String documentId = document.selectFirst("*.document_id").text();
                      String documentVersion = document.selectFirst("*.document_ver").text();
                      //This is parse metaInfo
-                     //TODO add fileName
                      MetaInfo metaInfo = parseMetaInfo(document);
+                     metaInfo.setFileName(file.getName());
                      switch (documentType) {
                          case "URS":
                              Set<URSDetail> ursDetails = parseURSDetail(document);
@@ -121,6 +122,7 @@ public class HtmlParser implements ApplicationRunner {
                                                                .prerequisites(prerequisites)
                                                                .build();
                              Set<TestCase> testCases = parseTestCase(document);
+                             testScript.setFileName(file.getName());
                              testScript.setTestCases(testCases);
                              testScript.setDocumentId(documentId);
                              testScript.setVersion(documentVersion);
@@ -130,8 +132,7 @@ public class HtmlParser implements ApplicationRunner {
                              break;
                      }
                  });
-
-
+        populateURS_FRS_Relation(project);
         projectRepository.save(project);
     }
 
@@ -236,10 +237,12 @@ public class HtmlParser implements ApplicationRunner {
                           String stepNumber = row.selectFirst("td.step").text();
                           String instruction = row.selectFirst("td.step_instruction").text();
                           String expectedResults = row.selectFirst("td.expected_results").text();
+                          String requirement = getTextOfAllElement(row, "td.tested_requirements");
                           return ScriptInstruction.builder()
                                                   .stepNumber(stepNumber)
                                                   .stepInstruction(instruction)
                                                   .expectedResults(expectedResults)
+                                                  .testedRequirements(requirement)
                                                   .build();
                       }).collect(Collectors.toSet());
     }
@@ -274,5 +277,28 @@ public class HtmlParser implements ApplicationRunner {
                      .map(Element::text)
                      .filter(StringUtils::isNotBlank)
                      .collect(Collectors.joining("\n"));
+    }
+
+    private void populateURS_FRS_Relation(Project project) {
+        project.getFrs()
+                .parallelStream()
+                .forEach(frs -> {
+                    frs.getFrsDetails()
+                            .parallelStream()
+                            .forEach(frsDetail -> {
+                                Stream.of(frsDetail.getRelatedURS().split(StringUtils.SPACE))
+                                        .filter(StringUtils::isNoneBlank)
+                                        .forEach(ursDeRe -> {
+                                            project.getUrs()
+                                                    .parallelStream()
+                                                    .forEach(urs -> {
+                                                        urs.getUrsDetails()
+                                                                .parallelStream()
+                                                                .filter(ursDetail -> StringUtils.equals(ursDetail.getDetailMetaInfo().getRequirementId(), ursDeRe))
+                                                                .forEach(ursDetail -> ursDetail.addFrsDetail(frsDetail));
+                                                    });
+                                        });
+                            });
+                });
     }
 }

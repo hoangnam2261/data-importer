@@ -1,26 +1,18 @@
 package com.astellas.poc.sdlc.models;
 
-import lombok.Builder;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "urs_detail")
-@Setter
-@Entity
 @Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "urs_detail")
+@Entity
 public class URSDetail {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -31,8 +23,12 @@ public class URSDetail {
     private URS urs;
 
     //TODO we need to add 1 more field: Related URS "frs_detail.related_urs, urs_frs_relation.*"
-    @ManyToMany(mappedBy = "ursDetails")
-    private Set<FRSDetail> frsDetails;
+    @Builder.Default
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(name = "urs_frs_relation",
+            joinColumns = @JoinColumn(name = "urs_detail_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "frs_detail_id", referencedColumnName = "id"))
+    private Set<FRSDetail> frsDetails = new HashSet<>();
 
     @Column(name = "requirement_category")
     @Enumerated(EnumType.STRING)
@@ -40,4 +36,9 @@ public class URSDetail {
 
     @Embedded
     private DetailMetaInfo detailMetaInfo;
+
+    public void addFrsDetail(FRSDetail frsDetail) {
+        this.frsDetails.add(frsDetail);
+        frsDetail.addUrsDetail(this);
+    }
 }

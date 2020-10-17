@@ -1,20 +1,16 @@
 package com.astellas.poc.sdlc.models;
 
+import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Table(name = "project")
 @Entity
-@Setter
 public class Project {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -22,10 +18,10 @@ public class Project {
 
     private String name;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private Set<URS> urs = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Set<FRS> frs = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)

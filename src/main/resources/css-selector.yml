@@ -1,0 +1,53 @@
+
+#Document class
+document.documentType: \*.document_type
+document.documentId: \*.document_id
+document.documentVersion: \*.document_ver
+
+#common MetaInfo class for URS, FRS, DCS
+meta.info.purpose: p.purpose
+meta.info.scope: p.scope
+meta.info.out_of_scope: p.out_of_scope
+meta.info.assumptions: p.assumptions
+meta.info.limitations: p.limitations
+meta.info.dependencies: p.dependencies
+meta.info.system_description: p.system_description
+
+#URS ---> URS detail
+urs.business_process_description: p.business_process_description
+urs.urs_id : td.urs_id
+
+#FRS --> FRS detail
+frs.business_process_description: p.business_process_description
+frs.parent_urs_id_number : td.parent_urs_id_number
+frs.frs_id: td.frs_idnumber
+
+
+#common DetailMetaInfo for URSDetail and FRSDetail
+detail.meta.info.requirement_description : td.requirement_description
+detail.meta.info.risk_areabusiness_regulated_safety : td.risk_areabusiness_regulated_safety
+detail.meta.info.criticality_rating_1_2_or_3 : td.criticality_rating_1_2_or_3
+
+
+#DCS class
+dcs.item_no : span.item_no
+
+
+#TestScript Class
+testscript.test_script_type : p.test_script_type
+testscript.purpose : p.purpose
+testscript.prerequisites : p.prerequisites
+
+#TestCase class
+testcase.test_case_div : div.test_case_div
+testcase.test_case_id : h2.test_case_id
+testcase.test_case_title : h2.test_case_title
+testcase.test_objective : p.test_objective
+testcase.tested_requirements : p.tested_requirements
+testcase.test_acceptance_criteria : p.test_acceptance_criteria
+
+#Script Instruction
+scriptinstruction.step : td.step
+scriptinstruction.step_instruction : td.step_instruction
+scriptinstruction.expected_results : td.expected_results
+scriptinstruction.tested_requirements : td.tested_requirements

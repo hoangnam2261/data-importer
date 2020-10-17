@@ -53,5 +53,8 @@ You also can run the tests as below.
 
 
 TODO:
-- config cssSelector in configuration file
+
 - document, how to run project
+- update logic according to clarification in forums.
+- category classes by configuration  
+- code format

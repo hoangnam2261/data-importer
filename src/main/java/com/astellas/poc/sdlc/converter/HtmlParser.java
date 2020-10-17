@@ -15,21 +15,17 @@ import com.astellas.poc.sdlc.models.URS;
 import com.astellas.poc.sdlc.models.URSDetail;
 import com.astellas.poc.sdlc.models.URSRequirementCategory;
 import com.astellas.poc.sdlc.repository.ProjectRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -38,107 +34,108 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class HtmlParser implements ApplicationRunner {
+@Slf4j
+public class HtmlParser {
+
+    public static final String URS = "URS";
+    public static final String FRS = "FRS";
+    public static final String DCS = "DCS";
+    public static final String TEST_SCRIPT = "Test Script";
 
     @Autowired
     private ProjectRepository projectRepository;
 
-    public void convert() throws Exception {
+    public void convert(String projectName, Collection<File> files) {
         Project project = new Project();
-        project.setName("ProjectC");
-        File dir = new File("C:\\project\\nng\\data-importer\\testdata\\root_folder\\projectA");
-        FileUtils.listFiles(dir, new String[]{"html"}, false)
-                 .parallelStream()
-                 .forEach(file -> {
+        project.setName(projectName);
+        files.parallelStream()
+                .forEach(file -> {
+                    try {
+                        Document document = Jsoup.parse(file, "UTF-8");
 
-                     Document document = null;
-                     try {
-                         document = Jsoup.parse(file, "UTF-8");
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                     String documentType = document.selectFirst("*.document_type").text();
-                     String documentId = document.selectFirst("*.document_id").text();
-                     String documentVersion = document.selectFirst("*.document_ver").text();
-                     //This is parse metaInfo
-                     MetaInfo metaInfo = parseMetaInfo(document);
-                     metaInfo.setFileName(file.getName());
-                     switch (documentType) {
-                         case "URS":
-                             Set<URSDetail> ursDetails = parseURSDetail(document);
-                             URS urs = new URS();
-                             urs.setMetaInfo(metaInfo);
-                             urs.setUrsDetails(ursDetails);
-                             urs.setBusinessProcessDescription(getTextOfAllElement(document, "p.business_process_description"));
-                             urs.setDocumentId(documentId);
-                             urs.setVersion(documentVersion);
-                             project.addUrs(urs);
-                             break;
-                         case "FRS":
-                             FRS frs = new FRS();
-                             frs.setMetaInfo(metaInfo);
-                             frs.setBusinessProcessDescription(getTextOfAllElement(document, "p.business_process_description"));
-                             Set<FRSDetail> frsDetails = parseFRSDetail(document);
-                             frs.setFrsDetails(frsDetails);
-                             frs.setDocumentId(documentId);
-                             frs.setVersion(documentVersion);
-                             project.addFrs(frs);
-                             break;
-                         case "DCS":
-                             DCS dcs = new DCS();
-                             dcs.setMetaInfo(metaInfo);
-                             //Get element after "System Description"
-                             Element element = document.selectFirst("p.system_description");
-                             Elements elements = element.nextElementSiblings();
-                             Set<DCSItem> dcsItems = new HashSet<>();
-                             elements.parallelStream()
-                                     .forEach(e -> {
-                                         //TODO should be ignore Appendix as require
-                                         //https://apps.topcoder.com/forums/?module=Thread&threadID=963350&start=0
-                                         if (e.tagName().matches("h[1-6]")) {
-                                             if (!e.select("span.item_no").isEmpty()) {
-                                                 DCSItem dcsItem = new DCSItem();
-                                                 dcsItem.setItemNumber(e.selectFirst("span.item_no").text());
-                                                 dcsItem.setItemTitle(e.text());
-                                                 if ("p".equals(e.nextElementSibling().tagName())) {
-                                                     dcsItem.setSpecification(e.nextElementSibling().text());
-                                                 }
-                                                 dcsItems.add(dcsItem);
-                                             }
-                                         }
-                                     });
-                             dcs.setDcsItems(dcsItems);
-                             dcs.setDocumentId(documentId);
-                             dcs.setVersion(documentVersion);
-                             project.addDcs(dcs);
-                             break;
-                         case "Test Script":
-                             String testCategory = document.selectFirst("p.test_script_type").text();
-                             String purpose = document.selectFirst("p.purpose").text();
-                             String prerequisites = getTextOfAllElement(document,"p.prerequisites");
-                             TestScript testScript = TestScript.builder()
-                                                               .testCategory(testCategory)
-                                                               .purpose(purpose)
-                                                               .prerequisites(prerequisites)
-                                                               .build();
-                             Set<TestCase> testCases = parseTestCase(document);
-                             testScript.setFileName(file.getName());
-                             testScript.setTestCases(testCases);
-                             testScript.setDocumentId(documentId);
-                             testScript.setVersion(documentVersion);
-                             project.addTestScript(testScript);
-                             break;
-                         default:
-                             break;
-                     }
-                 });
+                        String documentType = document.selectFirst("*.document_type").text();
+                        String documentId = document.selectFirst("*.document_id").text();
+                        String documentVersion = document.selectFirst("*.document_ver").text();
+                        //This is parse metaInfo
+                        MetaInfo metaInfo = parseMetaInfo(document);
+                        metaInfo.setFileName(file.getName());
+                        switch (documentType) {
+                            case URS:
+                                Set<URSDetail> ursDetails = parseURSDetail(document);
+                                URS urs = new URS();
+                                urs.setUrsDetails(ursDetails);
+                                urs.setBusinessProcessDescription(getTextOfAllElement(document, "p.business_process_description"));
+                                urs.setDocumentId(documentId);
+                                urs.setVersion(documentVersion);
+                                urs.setMetaInfo(metaInfo);
+                                project.addUrs(urs);
+                                break;
+                            case FRS:
+                                FRS frs = new FRS();
+                                frs.setBusinessProcessDescription(getTextOfAllElement(document, "p.business_process_description"));
+                                Set<FRSDetail> frsDetails = parseFRSDetail(document);
+                                frs.setFrsDetails(frsDetails);
+                                frs.setMetaInfo(metaInfo);
+                                frs.setDocumentId(documentId);
+                                frs.setVersion(documentVersion);
+                                project.addFrs(frs);
+                                break;
+                            case DCS:
+                                DCS dcs = new DCS();
+                                //Get element after "System Description"
+                                Element element = document.selectFirst("p.system_description");
+                                Elements elements = element.nextElementSiblings();
+                                Set<DCSItem> dcsItems = new HashSet<>();
+                                elements.parallelStream()
+                                        .forEach(e -> {
+                                            //TODO should be ignore Appendix as require
+                                            //https://apps.topcoder.com/forums/?module=Thread&threadID=963350&start=0
+                                            if (e.tagName().matches("h[1-6]")) {
+                                                if (!e.select("span.item_no").isEmpty()) {
+                                                    DCSItem dcsItem = new DCSItem();
+                                                    dcsItem.setItemNumber(e.selectFirst("span.item_no").text());
+                                                    dcsItem.setItemTitle(e.text());
+                                                    if ("p".equals(e.nextElementSibling().tagName())) {
+                                                        dcsItem.setSpecification(e.nextElementSibling().text());
+                                                    }
+                                                    dcsItems.add(dcsItem);
+                                                }
+                                            }
+                                        });
+                                dcs.setDcsItems(dcsItems);
+                                dcs.setMetaInfo(metaInfo);
+                                dcs.setDocumentId(documentId);
+                                dcs.setVersion(documentVersion);
+                                project.addDcs(dcs);
+                                break;
+                            case TEST_SCRIPT:
+                                String testCategory = document.selectFirst("p.test_script_type").text();
+                                String purpose = document.selectFirst("p.purpose").text();
+                                String prerequisites = getTextOfAllElement(document, "p.prerequisites");
+                                TestScript testScript = TestScript.builder()
+                                        .testCategory(testCategory)
+                                        .purpose(purpose)
+                                        .prerequisites(prerequisites)
+                                        .build();
+                                Set<TestCase> testCases = parseTestCase(document);
+                                testScript.setFileName(file.getName());
+                                testScript.setTestCases(testCases);
+                                testScript.setDocumentId(documentId);
+                                testScript.setVersion(documentVersion);
+                                project.addTestScript(testScript);
+                                break;
+                            default:
+                                break;
+                        }
+                    } catch (Exception e) {
+                        log.error("Error occurred in processing file {} in project {}",
+                                file.getName(),
+                                projectName,
+                                e);
+                    }
+                });
         populateURS_FRS_Relation(project);
         projectRepository.save(project);
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        convert();
     }
 
     private Set<URSDetail> parseURSDetail(Document document) {

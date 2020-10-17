@@ -53,7 +53,7 @@ You also can run the tests as below.
 
 
 TODO:
-- Read project from folder
 - Update existing project
 - config cssSelector in configuration file
 - document, how to run project
+- Refactor auditEntity

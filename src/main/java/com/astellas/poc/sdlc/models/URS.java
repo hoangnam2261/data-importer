@@ -3,25 +3,20 @@ package com.astellas.poc.sdlc.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Setter
 @Getter
 @Table(name = "urs")
 @Entity
-public class URS {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
-
-    @Column(name = "document_id")
-    private String documentId;
+public class URS extends AbstractDocument {
 
     @OneToMany(mappedBy = "urs", cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Set<URSDetail> ursDetails;
@@ -31,8 +26,6 @@ public class URS {
 
     @Column(name = "business_process_description")
     private String businessProcessDescription;
-
-    private String version;
 
     public URS setUrsDetails(Set<URSDetail> ursDetails) {
         this.ursDetails = ursDetails;

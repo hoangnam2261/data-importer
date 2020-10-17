@@ -56,4 +56,3 @@ TODO:
 - Update existing project
 - config cssSelector in configuration file
 - document, how to run project
-- Refactor auditEntity

@@ -3,7 +3,11 @@ package com.astellas.poc.sdlc.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,10 +15,7 @@ import java.util.Set;
 @Getter
 @Table(name = "project")
 @Entity
-public class Project {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+public class Project extends Auditable {
 
     private String name;
 

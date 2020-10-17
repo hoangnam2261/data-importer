@@ -11,7 +11,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -37,7 +36,7 @@ public class FRSDetail extends Auditable {
     private FRSRequirementCategory requirementCategory;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "frsDetails", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "frsDetails")
     private Set<URSDetail> ursDetails = new HashSet<>();
 
     @Embedded

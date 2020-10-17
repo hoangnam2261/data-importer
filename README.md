@@ -53,6 +53,5 @@ You also can run the tests as below.
 
 
 TODO:
-- Update existing project
 - config cssSelector in configuration file
 - document, how to run project

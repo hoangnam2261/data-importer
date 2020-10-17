@@ -46,6 +46,12 @@ public class HtmlParser {
     private ProjectRepository projectRepository;
 
     public void convert(String projectName, Collection<File> files) {
+        //A body guard: If only have projectFolder without any files in it
+        // We DO NOT delete existed project in database and start insert process
+        if (files.isEmpty()) {
+            return;
+        }
+        deleteProjectIfExisted(projectName);
         Project project = new Project();
         project.setName(projectName);
         files.parallelStream()
@@ -136,6 +142,11 @@ public class HtmlParser {
                 });
         populateURS_FRS_Relation(project);
         projectRepository.save(project);
+    }
+
+    private void deleteProjectIfExisted(String projectName) {
+        projectRepository.findProjectByName(projectName)
+                         .ifPresent(project -> projectRepository.delete(project));
     }
 
     private Set<URSDetail> parseURSDetail(Document document) {

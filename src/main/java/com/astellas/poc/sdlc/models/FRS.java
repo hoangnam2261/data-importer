@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 public class FRS extends AbstractDocument {
 
-    @OneToMany(mappedBy = "frs", fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "frs", orphanRemoval = true)
     private Set<FRSDetail> frsDetails;
 
     @Embedded

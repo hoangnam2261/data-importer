@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 public class URS extends AbstractDocument {
 
-    @OneToMany(mappedBy = "urs", cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "urs", cascade = CascadeType.ALL)
     private Set<URSDetail> ursDetails;
 
     @Embedded

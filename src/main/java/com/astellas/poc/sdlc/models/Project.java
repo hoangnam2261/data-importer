@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
@@ -19,10 +18,10 @@ public class Project extends Auditable {
 
     private String name;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<URS> urs = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<FRS> frs = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)

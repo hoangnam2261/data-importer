@@ -36,7 +36,7 @@ public class URSDetail extends Auditable {
 
     //TODO we need to add 1 more field: Related URS "frs_detail.related_urs, urs_frs_relation.*"
     @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "urs_frs_relation",
             joinColumns = @JoinColumn(name = "urs_detail_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "frs_detail_id", referencedColumnName = "id"))

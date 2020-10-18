@@ -14,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 
 import com.astellas.poc.sdlc.converter.HtmlConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 @Slf4j
@@ -29,27 +30,32 @@ public class ProcessRunner implements ApplicationRunner {
   public void run(ApplicationArguments args) {
     log.info("process started.");
 
-    String proc = getOptionValue(args, "proc");
-    String root = getOptionValue(args, "dir");
-    String project = getOptionValue(args, "project");
+    String proc = getOptionValue(args, "proc", false);
+    String root = getOptionValue(args, "dir", true);
+    String project = getOptionValue(args, "project", false);
 
-    File rootDir = new File(root);
+    try {
 
-    // This code is just for investigation. not for production.
-    if ("conv".equals(proc)) {
-      if (project != null) {
-        //process for 1 project
-        File destDir = Path.of(root, project).toFile();
-        processProjectFolder(destDir);
-      } else {
-        //process for all projects under --dir folder
-        File[] values = rootDir.listFiles(File::isDirectory);
-        if (values != null) {
-          Stream.of(values)
-                  .parallel()
-                  .forEach(this::processProjectFolder);
+      File rootDir = new File(root);
+
+      // This code is just for investigation. not for production.
+      if ("conv".equals(proc)) {
+        if (project != null) {
+          //process for 1 project
+          File destDir = Path.of(root, project).toFile();
+          processProjectFolder(destDir);
+        } else {
+          //process for all projects under --dir folder
+          File[] values = rootDir.listFiles(File::isDirectory);
+          if (values != null) {
+            Stream.of(values)
+                    .parallel()
+                    .forEach(this::processProjectFolder);
+          }
         }
       }
+    } catch (Exception e) {
+      log.error("There is an error when process rootFolder {}", root, e);
     }
     log.info("process ended.");
   }
@@ -58,7 +64,7 @@ public class ProcessRunner implements ApplicationRunner {
     htmlParser.convert(destDir.getName(), FileUtils.listFiles(destDir, new String[]{"html"}, false));
   }
 
-  protected String getOptionValue(ApplicationArguments args, String optionName) {
+  protected String getOptionValue(ApplicationArguments args, String optionName, boolean required) {
     if (args == null) {
       return null;
     }
@@ -67,7 +73,10 @@ public class ProcessRunner implements ApplicationRunner {
     }
 
     List<String> optVals = args.getOptionValues(optionName);
-    if (optVals == null || optVals.isEmpty()) {
+    if (CollectionUtils.isEmpty(optVals)) {
+      if (required) {
+        throw new IllegalArgumentException(String.format("Parameter %s is required", optionName));
+      }
       return null;
     }
 

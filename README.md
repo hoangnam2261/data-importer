@@ -13,10 +13,12 @@
 2. Run docker
 ```docker run --name=mysql1 -p3306:3306 -e MYSQL_ROOT_PASSWORD=sdlc -e MYSQL_DATABASE=sdlc_poc -e MYSQL_USER=sdlc -e MYSQL_PASSWORD=sdlc -e MYSQL_ONETIME_PASSWORD=false -d mysql/mysql-server:8.0```
 3. Connecting to MySQL Server from within the Container to change root password
-`docker exec -it mysql1 mysql -uroot -p`
-`ALTER USER 'root'@'localhost' IDENTIFIED BY 'sdlc';`
-4.Run sql file `sdlc_schema_20201013.sql` in container:
-https://dev.to/n350071/login-to-mysql-on-docker-and-run-a-sql-file-2bk7
+    ```bash
+    docker exec -it mysql1 mysql -uroot -p
+   ALTER USER 'root'@'localhost' IDENTIFIED BY 'sdlc';
+    ```
+4.Run sql file ```sdlc_schema_20201013.sql``` in container:
+```https://dev.to/n350071/login-to-mysql-on-docker-and-run-a-sql-file-2bk7```
  
 ## Quick Start
 1. Run MySQL server
@@ -51,10 +53,25 @@ You also can run the tests as below.
     ./gradlew build
     ```
 
+## Run
+1. 
+    ```bash
+    ./gradlew bootRun --dir /path/to/root --project="ProjectA"  
+    ```
+   There are 2 command-line parameters:
+   - dir (required) : this is the path to rootFolder.
+           The rootFolder contains all project Folders like: projectA, projectB
+   - project (optional): If do not provide this option, the application will process all folders in root folder.
 
+## Update policy
+   - In project folder, if it had any files(with .html extension) in that,
+        application will delete all data related to that project includes: project, urs, frs, urs detail, frs detail, ...
+        Otherwise, it will skip. 
+
+
+     
 TODO:
 
-- document, how to run project
 - update logic according to clarification in forums.
 - category classes by configuration  
 - code format

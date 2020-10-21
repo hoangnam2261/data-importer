@@ -56,9 +56,10 @@ You also can run the tests as below.
 ## Run
 1. 
     ```bash
-    ./gradlew bootRun --dir /path/to/root --project="ProjectA"  
+     ./gradlew bootRun --args='--proc=import --dir=C:\Users\LW81343\Desktop\base_code1\data-importer\testdata\root_folder --project=projectA'  
     ```
-   There are 2 command-line parameters:
+   There are 3 command-line parameters:
+   - proc: this is name of process you want to run: import for "import HTML file to mysql"
    - dir (required) : this is the path to rootFolder.
            The rootFolder contains all project Folders like: projectA, projectB
    - project (optional): If do not provide this option, the application will process all folders in root folder.

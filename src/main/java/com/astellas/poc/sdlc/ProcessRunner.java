@@ -39,7 +39,7 @@ public class ProcessRunner implements ApplicationRunner {
       File rootDir = new File(root);
 
       // This code is just for investigation. not for production.
-      if ("conv".equals(proc)) {
+      if ("import".equals(proc)) {
         if (project != null) {
           //process for 1 project
           File destDir = Path.of(root, project).toFile();

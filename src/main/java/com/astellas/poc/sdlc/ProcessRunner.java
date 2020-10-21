@@ -57,6 +57,7 @@ public class ProcessRunner implements ApplicationRunner {
       log.error("There is an error when process rootFolder {}", root, e);
     }
     log.info("process ended.");
+    System.exit(0);
   }
 
   private void processProjectFolder(File destDir) {

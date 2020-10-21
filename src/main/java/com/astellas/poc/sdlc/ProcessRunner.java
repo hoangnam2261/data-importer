@@ -49,8 +49,7 @@ public class ProcessRunner implements ApplicationRunner {
           File[] values = rootDir.listFiles(File::isDirectory);
           if (values != null) {
             Stream.of(values)
-                    .parallel()
-                    .forEach(this::processProjectFolder);
+                  .forEach(this::processProjectFolder);
           }
         }
       }

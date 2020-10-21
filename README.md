@@ -56,7 +56,7 @@ You also can run the tests as below.
 ## Run
 1. 
     ```bash
-     ./gradlew bootRun --args='--proc=import --dir=C:\Users\LW81343\Desktop\base_code1\data-importer\testdata\root_folder --project=projectA'  
+     ./gradlew bootRun --args="--proc=import --dir=C:\Users\LW81343\Desktop\base_code1\data-importer\testdata\root_folder --project=projectA"  
     ```
    There are 3 command-line parameters:
    - proc: this is name of process you want to run: import for "import HTML file to mysql"

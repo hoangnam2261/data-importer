@@ -29,5 +29,6 @@ public class DCSItem extends Auditable {
     @Column(name = "item_title")
     private String itemTitle;
 
+    @Column(name = "specification")
     private String specification;
 }

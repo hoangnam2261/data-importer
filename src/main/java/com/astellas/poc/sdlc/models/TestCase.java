@@ -27,6 +27,7 @@ public class TestCase extends Auditable {
     @JoinColumn(name = "parent_id")
     private TestScript testScript;
 
+    @Builder.Default
     @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL)
     private Set<ScriptInstruction> scriptInstructions = new HashSet<>();
 
